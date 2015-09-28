@@ -1,0 +1,33 @@
+info:
+  app:
+    name: streaming-info-service
+    description: Shows information of where and how you can stream audio and videos
+
+endpoints:
+  restart:
+    enabled: true
+  refresh:
+    enabled: true
+
+server:
+  port: 8045
+
+spring:  
+
+eureka:
+  instance:
+    preferIpAddress: true
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+
+---
+spring:
+    profiles: docker
+
+eureka:
+  instance:
+    preferIpAddress: true
+  client:
+    serviceUrl:
+      defaultZone: http://discovery:8761/eureka/

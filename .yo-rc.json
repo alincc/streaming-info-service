@@ -1,0 +1,6 @@
+{
+  "generator-spring-microservice": {
+    "packageName": "no.nb.microservices.streaminginfo",
+    "packageFolder": "no/nb/microservices/streaminginfo"
+  }
+}
