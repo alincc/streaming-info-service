@@ -12,7 +12,14 @@ endpoints:
 server:
   port: 8045
 
-spring:  
+spring:
+    datasource:
+        driverClassName: com.mysql.jdbc.Driver
+        url: jdbc:mysql://localhost/database
+        username: username
+        password: password
+    jpa:
+        show-sql: true
 
 eureka:
   instance:

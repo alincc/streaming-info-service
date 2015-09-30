@@ -1,46 +1,40 @@
 package no.nb.microservices.streaminginfo.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by andreasb on 29.09.15.
  */
 public class StreamInfo {
-    private String name;
-    private String type;
+    private String urn;
     private double playDuration;
     private double playStart;
-    private long size;
-    private VideoInfo video;
-    private AudioInfo audio;
+    private List<StreamQuality> qualities = new ArrayList<>();
 
-    public StreamInfo(String name, String type) {
-        this.name = name;
-        this.type = type;
+    public StreamInfo(String urn) {
+        this.urn = urn;
     }
 
-    public StreamInfo(String name, String type, double playDuration, double playStart, long size, VideoInfo video, AudioInfo audio) {
-        this.name = name;
-        this.type = type;
+    public StreamInfo(String name, double playDuration, double playStart) {
+        this.urn = name;
         this.playDuration = playDuration;
         this.playStart = playStart;
-        this.size = size;
-        this.video = video;
-        this.audio = audio;
     }
 
-    public String getName() {
-        return name;
+    public StreamInfo(String urn, double playDuration, double playStart, List<StreamQuality> qualities) {
+        this.urn = urn;
+        this.playDuration = playDuration;
+        this.playStart = playStart;
+        this.qualities = qualities;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public String getUrn() {
+        return urn;
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
+    public void setUrn(String urn) {
+        this.urn = urn;
     }
 
     public double getPlayDuration() {
@@ -59,33 +53,11 @@ public class StreamInfo {
         this.playStart = playStart;
     }
 
-    public long getSize() {
-        return size;
+    public List<StreamQuality> getQualities() {
+        return qualities;
     }
 
-    public void setSize(long size) {
-        this.size = size;
-    }
-
-    public int totalBitrate() {
-        int audioBitrate = (this.getAudio() != null) ? this.getAudio().getAudioBitrate() : 0;
-        int videoBitrate = (this.getVideo() != null) ? this.getVideo().getVideoBitrate() : 0;
-        return videoBitrate + audioBitrate;
-    }
-
-    public VideoInfo getVideo() {
-        return video;
-    }
-
-    public void setVideo(VideoInfo video) {
-        this.video = video;
-    }
-
-    public AudioInfo getAudio() {
-        return audio;
-    }
-
-    public void setAudio(AudioInfo audio) {
-        this.audio = audio;
+    public void setQualities(List<StreamQuality> qualities) {
+        this.qualities = qualities;
     }
 }
