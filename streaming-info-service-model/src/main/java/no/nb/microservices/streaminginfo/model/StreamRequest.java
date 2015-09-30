@@ -17,6 +17,8 @@ public class StreamRequest {
     private int extent;
     private String query;
 
+    public StreamRequest() {}
+
     @JsonCreator
     public StreamRequest(@JsonProperty("urn") String urn,
                          @JsonProperty("ip") String ip,

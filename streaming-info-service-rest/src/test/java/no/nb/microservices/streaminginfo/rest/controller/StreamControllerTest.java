@@ -1,5 +1,6 @@
 package no.nb.microservices.streaminginfo.rest.controller;
 
+import no.nb.microservices.streaminginfo.core.security.repository.SecurityRepository;
 import no.nb.microservices.streaminginfo.core.stream.service.StreamService;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,7 +11,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -23,16 +23,19 @@ public class StreamControllerTest {
     @Mock
     private StreamService streamService;
 
+    @Mock
+    private SecurityRepository securityRepository;
+
     @Before
     public void setup() {
-        homeController = new StreamController(streamService);
+        homeController = new StreamController(streamService, securityRepository);
         mockMvc = MockMvcBuilders.standaloneSetup(homeController).build();
     }
 
     @Test
     public void helloWorldTest() throws Exception{
         mockMvc.perform(get("/streams"))
-                .andExpect(status().isOk());
+                .andExpect(status().is4xxClientError());
     }
 
 }

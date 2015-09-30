@@ -3,7 +3,6 @@ package no.nb.microservices.streaminginfo.core.stream.service;
 import no.nb.microservices.catalogitem.rest.model.ItemResource;
 import no.nb.microservices.streaminginfo.core.item.service.ItemService;
 import no.nb.microservices.streaminginfo.core.resource.model.MediaResource;
-import no.nb.microservices.streaminginfo.core.resource.repository.ResourcesRepository;
 import no.nb.microservices.streaminginfo.core.resource.service.MediaResourceService;
 import no.nb.microservices.streaminginfo.core.stream.exception.StreamException;
 import no.nb.microservices.streaminginfo.model.*;

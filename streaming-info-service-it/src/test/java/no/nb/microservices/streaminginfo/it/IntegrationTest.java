@@ -1,6 +1,5 @@
 package no.nb.microservices.streaminginfo.it;
 
-import no.nb.microservices.streaminginfo.*;
 import com.netflix.loadbalancer.BaseLoadBalancer;
 import com.netflix.loadbalancer.ILoadBalancer;
 import com.netflix.loadbalancer.Server;
@@ -8,6 +7,7 @@ import com.squareup.okhttp.mockwebserver.Dispatcher;
 import com.squareup.okhttp.mockwebserver.MockResponse;
 import com.squareup.okhttp.mockwebserver.MockWebServer;
 import com.squareup.okhttp.mockwebserver.RecordedRequest;
+import no.nb.microservices.streaminginfo.Application;
 import okio.Buffer;
 import org.apache.commons.io.IOUtils;
 import org.junit.After;
@@ -37,7 +37,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
 
-        import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)

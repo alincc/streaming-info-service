@@ -2,7 +2,6 @@ package no.nb.microservices.streaminginfo.core.resource.service;
 
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.command.AsyncResult;
-import no.nb.microservices.catalogitem.rest.model.ItemResource;
 import no.nb.microservices.streaminginfo.core.resource.model.MediaResource;
 import no.nb.microservices.streaminginfo.core.resource.repository.ResourcesRepository;
 import org.springframework.beans.factory.annotation.Autowired;

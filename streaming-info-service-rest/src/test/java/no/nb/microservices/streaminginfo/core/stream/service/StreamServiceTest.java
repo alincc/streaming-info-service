@@ -4,7 +4,6 @@ import no.nb.microservices.catalogitem.rest.model.ItemResource;
 import no.nb.microservices.catalogitem.rest.model.Metadata;
 import no.nb.microservices.streaminginfo.core.item.service.ItemService;
 import no.nb.microservices.streaminginfo.core.resource.model.MediaResource;
-import no.nb.microservices.streaminginfo.core.resource.repository.ResourcesRepository;
 import no.nb.microservices.streaminginfo.core.resource.service.MediaResourceService;
 import no.nb.microservices.streaminginfo.model.StreamInfo;
 import no.nb.microservices.streaminginfo.model.StreamQuality;
@@ -22,11 +21,8 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 
 /**
