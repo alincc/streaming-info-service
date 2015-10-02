@@ -1,7 +1,7 @@
 package no.nb.microservices.streaminginfo.core.stream.service;
 
 import no.nb.microservices.catalogitem.rest.model.ItemResource;
-import no.nb.microservices.streaminginfo.core.item.service.ItemService;
+import no.nb.microservices.streaminginfo.core.item.service.IItemService;
 import no.nb.microservices.streaminginfo.core.resource.model.MediaResource;
 import no.nb.microservices.streaminginfo.core.resource.service.MediaResourceService;
 import no.nb.microservices.streaminginfo.core.stream.exception.StreamException;
@@ -18,12 +18,13 @@ import java.util.concurrent.Future;
  * Created by andreasb on 29.09.15.
  */
 @Service
-public class StreamService {
+public class StreamService implements IStreamService {
+
     private final MediaResourceService mediaResourceService;
-    private final ItemService itemService;
+    private final IItemService itemService;
 
     @Autowired
-    public StreamService(MediaResourceService mediaResourceService, ItemService itemService) {
+    public StreamService(MediaResourceService mediaResourceService, IItemService itemService) {
         this.mediaResourceService = mediaResourceService;
         this.itemService = itemService;
     }

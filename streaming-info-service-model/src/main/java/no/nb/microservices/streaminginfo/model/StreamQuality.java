@@ -10,6 +10,9 @@ public class StreamQuality {
     private VideoInfo video;
     private AudioInfo audio;
 
+    public StreamQuality() {
+    }
+
     public StreamQuality(String name, String type) {
         this.name = name;
         this.type = type;

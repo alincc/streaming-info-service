@@ -7,6 +7,9 @@ public class AudioInfo {
     private int audioBitrate;
     private String audioCodec;
 
+    public AudioInfo() {
+    }
+
     public AudioInfo(int audioBitrate, String audioCodec) {
         this.audioBitrate = audioBitrate;
         this.audioCodec = audioCodec;

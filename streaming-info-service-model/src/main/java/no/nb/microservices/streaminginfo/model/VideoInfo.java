@@ -9,6 +9,9 @@ public class VideoInfo {
     private int videoBitrate;
     private String videoCodec;
 
+    public VideoInfo() {
+    }
+
     public VideoInfo(int videoWidth, int videoHeight, int videoBitrate, String videoCodec) {
         this.videoWidth = videoWidth;
         this.videoHeight = videoHeight;

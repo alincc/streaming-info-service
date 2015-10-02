@@ -11,6 +11,10 @@
     </parent>
     <artifactId>streaming-info-service-it</artifactId>
 
+    <properties>
+        <ni.version>3.27</ni.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>no.nb.microservices.streaminginfo</groupId>
@@ -22,6 +26,12 @@
             <artifactId>streaming-info-service-rest</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.hsqldb</groupId>
+            <artifactId>hsqldb</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
 
         <!-- Testing -->
         <dependency>
@@ -55,6 +65,29 @@
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <version>2.4</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>no.nb.sesam.ni</groupId>
+            <artifactId>niserver</artifactId>
+            <version>${ni.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>no.nb.sesam.ni</groupId>
+            <artifactId>niclient</artifactId>
+            <version>${ni.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty</artifactId>
+            <version>3.5.11.Final</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.rrd4j</groupId>
+            <artifactId>rrd4j</artifactId>
+            <version>2.1.1</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

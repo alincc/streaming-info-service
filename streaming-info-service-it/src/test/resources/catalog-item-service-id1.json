@@ -1,0 +1,17 @@
+{  
+   "_links": {
+        "self": {
+           "href": "http://localhost/item/id1"
+        }
+    },
+   "metadata": {
+     "title": {
+       "title": "Title ID1"
+     },
+     "streamingInfo": {
+       "offset": 60,
+       "extent": 120,
+       "identifier": "id1"
+     }
+   }
+}

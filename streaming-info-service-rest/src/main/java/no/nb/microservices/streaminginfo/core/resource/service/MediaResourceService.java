@@ -3,7 +3,7 @@ package no.nb.microservices.streaminginfo.core.resource.service;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.command.AsyncResult;
 import no.nb.microservices.streaminginfo.core.resource.model.MediaResource;
-import no.nb.microservices.streaminginfo.core.resource.repository.ResourcesRepository;
+import no.nb.microservices.streaminginfo.core.resource.repository.MediaResourceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,10 +17,10 @@ import java.util.concurrent.Future;
 @Service
 public class MediaResourceService {
 
-    private ResourcesRepository resourcesRepository;
+    private MediaResourceRepository resourcesRepository;
 
     @Autowired
-    public MediaResourceService(ResourcesRepository resourcesRepository) {
+    public MediaResourceService(MediaResourceRepository resourcesRepository) {
         this.resourcesRepository = resourcesRepository;
     }
 
@@ -29,7 +29,7 @@ public class MediaResourceService {
         return new AsyncResult<List<MediaResource>>() {
             @Override
             public List<MediaResource> invoke() {
-                return resourcesRepository.getMediaFile(urn);
+                return resourcesRepository.findByIdentifier(urn);
             }
         };
     }

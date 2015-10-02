@@ -1,11 +1,5 @@
 package no.nb.microservices.streaminginfo.model;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * Created by andreasb on 29.09.15.
  */
@@ -15,25 +9,21 @@ public class StreamRequest {
     private String ssoToken;
     private int offset;
     private int extent;
-    private String query;
 
     public StreamRequest() {}
 
-    @JsonCreator
-    public StreamRequest(@JsonProperty("urn") String urn,
-                         @JsonProperty("ip") String ip,
-                         @JsonProperty("query") String query) {
+    public StreamRequest(String urn, String ip, String ssoToken) {
         this.urn = urn;
         this.ip = ip;
-        this.query = query;
-        parseQuery(query);
+        this.ssoToken = ssoToken;
     }
 
-    private void parseQuery(String query) {
-        Map<String, String> queryMap = getQueryMap(query);
-        this.ssoToken = queryMap.get("ssoToken");
-        this.offset = Integer.parseInt(queryMap.get("offset"));
-        this.extent = Integer.parseInt(queryMap.get("extent"));
+    public StreamRequest(String urn, String ip, String ssoToken, int offset, int extent) {
+        this.urn = urn;
+        this.ip = ip;
+        this.ssoToken = ssoToken;
+        this.offset = offset;
+        this.extent = extent;
     }
 
     public String getUrn() {
@@ -74,22 +64,5 @@ public class StreamRequest {
 
     public void setExtent(int extent) {
         this.extent = extent;
-    }
-
-    public void setQuery(String query) {
-        parseQuery(query);
-        this.query = query;
-    }
-
-    private Map<String, String> getQueryMap(String query) {
-        String[] params = query.split("&");
-        Map<String, String> map = new HashMap<>();
-        for (String param : params) {
-            String[] keyValue = param.split("=");
-            if (keyValue.length == 2) {
-                map.put(keyValue[0], keyValue[1]);
-            }
-        }
-        return map;
     }
 }

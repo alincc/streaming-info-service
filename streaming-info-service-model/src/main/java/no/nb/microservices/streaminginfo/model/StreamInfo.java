@@ -12,6 +12,9 @@ public class StreamInfo {
     private double playStart;
     private List<StreamQuality> qualities = new ArrayList<>();
 
+    public StreamInfo() {
+    }
+
     public StreamInfo(String urn) {
         this.urn = urn;
     }

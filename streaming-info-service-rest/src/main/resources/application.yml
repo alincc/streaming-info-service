@@ -15,11 +15,9 @@ server:
 spring:
     datasource:
         driverClassName: com.mysql.jdbc.Driver
-        url: jdbc:mysql://localhost/database
-        username: username
-        password: password
-    jpa:
-        show-sql: true
+        url: jdbc:mysql://localhost/test
+        username: dbuser
+        password: dbpass
 
 eureka:
   instance:
@@ -28,9 +26,15 @@ eureka:
     serviceUrl:
       defaultZone: http://localhost:8761/eureka/
 
+ni:
+  servers: localhost:7654
+
 ---
 spring:
     profiles: docker
+
+server:
+    port: 8080
 
 eureka:
   instance:
@@ -38,3 +42,6 @@ eureka:
   client:
     serviceUrl:
       defaultZone: http://discovery:8761/eureka/
+
+ni:
+  servers: niserver:7654
