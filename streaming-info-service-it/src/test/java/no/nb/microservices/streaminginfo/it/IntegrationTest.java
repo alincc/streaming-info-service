@@ -18,6 +18,7 @@ import no.nb.sesam.ni.niserver.AuthorisationHandlerResolver;
 import no.nb.sesam.ni.niserver.AuthorisationRequest;
 import no.nb.sesam.ni.niserver.NiServer;
 import no.nb.sesam.ni.niserver.authorisation.AcceptHandler;
+import no.nb.sesam.ni.niserver.authorisation.DenyHandler;
 import org.apache.commons.io.IOUtils;
 import org.junit.*;
 import org.junit.runner.RunWith;
@@ -38,7 +39,6 @@ import org.springframework.util.SocketUtils;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.HashMap;
 
@@ -123,7 +123,9 @@ public class IntegrationTest {
     }
 
     @Test
-    public void getStreamInfoTest() throws URISyntaxException {
+    public void getStreamInfoTest() {
+        setupAllowedNiServer();
+
         final HashMap<String, String> urlVariables = new HashMap<>();
         urlVariables.put("urn", "URN:NBN:no-nb_video_958");
         urlVariables.put("ip", "127.0.0.1");
@@ -153,6 +155,43 @@ public class IntegrationTest {
         assertEquals(0, lowQuality.getAudio().getAudioBitrate());
         assertEquals(null, lowQuality.getAudio().getAudioCodec());
     }
+
+    @Test
+    public void getStreamInfoDenyTest() throws Exception {
+        setupDenyNiServer();
+
+        final HashMap<String, String> urlVariables = new HashMap<>();
+        urlVariables.put("urn", "URN:NBN:no-nb_video_958");
+        urlVariables.put("ip", "127.0.0.1");
+        urlVariables.put("ssoToken", "dummyToken");
+        urlVariables.put("offset", "60");
+        urlVariables.put("extent", "180");
+        String uri = "http://localhost:" + port + "/streams?urn={urn}&ip={ip}&ssoToken={ssoToken}&offset={offset}&extent={extent}";
+        ResponseEntity<StreamInfo> response = rest.getForEntity(uri, StreamInfo.class, urlVariables);
+
+        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+    }
+
+    private void setupAllowedNiServer() {
+        niServer.shutdown();
+        try {
+            niServer = new NiServer(TEST_SERVER_PORT,
+                    new no.nb.sesam.ni.niserver.Cluster(TEST_SERVER_ADDR),
+                    new MockAuthorisationHandlerResolver(), null, null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    private void setupDenyNiServer() {
+        niServer.shutdown();
+        try {
+            niServer = new NiServer(TEST_SERVER_PORT,
+                    new no.nb.sesam.ni.niserver.Cluster(TEST_SERVER_ADDR),
+                    new MockAuthorisationDeniedHandlerResolver(), null, null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
 
 @Configuration
@@ -177,7 +216,13 @@ class MockAuthorisationHandlerResolver implements AuthorisationHandlerResolver {
     public AuthorisationHandler resolve(AuthorisationRequest request) {
         return new AcceptHandler();
     }
+}
 
+class MockAuthorisationDeniedHandlerResolver implements AuthorisationHandlerResolver {
+
+    public AuthorisationHandler resolve(AuthorisationRequest request) {
+        return new DenyHandler();
+    }
 }
 
 
