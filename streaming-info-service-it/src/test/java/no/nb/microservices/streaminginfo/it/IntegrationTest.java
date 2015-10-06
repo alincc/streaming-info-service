@@ -124,15 +124,11 @@ public class IntegrationTest {
 
     @Test
     public void getStreamInfoTest() {
-        setupAllowedNiServer();
-
         final HashMap<String, String> urlVariables = new HashMap<>();
         urlVariables.put("urn", "URN:NBN:no-nb_video_958");
         urlVariables.put("ip", "127.0.0.1");
         urlVariables.put("ssoToken", "dummyToken");
-        urlVariables.put("offset", "60");
-        urlVariables.put("extent", "180");
-        String uri = "http://localhost:" + port + "/streams?urn={urn}&ip={ip}&ssoToken={ssoToken}&offset={offset}&extent={extent}";
+        String uri = "http://localhost:" + port + "/streams?urn={urn}&ip={ip}&ssoToken={ssoToken}";
         ResponseEntity<StreamInfo> response = rest.getForEntity(uri, StreamInfo.class, urlVariables);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -148,49 +144,30 @@ public class IntegrationTest {
         assertEquals("no-nb_video_958_1280x720x4000.mp4", lowQuality.getName());
         assertEquals("mp4", lowQuality.getType());
         assertEquals(2120389, lowQuality.getSize());
-        assertEquals(0, lowQuality.getVideo().getVideoBitrate());
-        assertEquals(0, lowQuality.getVideo().getVideoHeight());
-        assertEquals(0, lowQuality.getVideo().getVideoWidth());
-        assertEquals(null, lowQuality.getVideo().getVideoCodec());
-        assertEquals(0, lowQuality.getAudio().getAudioBitrate());
-        assertEquals(null, lowQuality.getAudio().getAudioCodec());
+        assertEquals(0, lowQuality.getVideo().getBitrate());
+        assertEquals(0, lowQuality.getVideo().getHeight());
+        assertEquals(0, lowQuality.getVideo().getWidth());
+        assertEquals(null, lowQuality.getVideo().getCodec());
+        assertEquals(0, lowQuality.getAudio().getBitrate());
+        assertEquals(null, lowQuality.getAudio().getCodec());
     }
 
     @Test
-    public void getStreamInfoDenyTest() throws Exception {
-        setupDenyNiServer();
-
+    public void getStatfjordStreamInfoTest() {
         final HashMap<String, String> urlVariables = new HashMap<>();
-        urlVariables.put("urn", "URN:NBN:no-nb_video_958");
+        urlVariables.put("urn", "URN:NBN:no-nb_dra_1992-01783P");
         urlVariables.put("ip", "127.0.0.1");
         urlVariables.put("ssoToken", "dummyToken");
-        urlVariables.put("offset", "60");
-        urlVariables.put("extent", "180");
-        String uri = "http://localhost:" + port + "/streams?urn={urn}&ip={ip}&ssoToken={ssoToken}&offset={offset}&extent={extent}";
+        String uri = "http://localhost:" + port + "/streams?urn={urn}&ip={ip}&ssoToken={ssoToken}";
         ResponseEntity<StreamInfo> response = rest.getForEntity(uri, StreamInfo.class, urlVariables);
 
-        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
-    }
+        assertEquals(HttpStatus.OK, response.getStatusCode());
 
-    private void setupAllowedNiServer() {
-        niServer.shutdown();
-        try {
-            niServer = new NiServer(TEST_SERVER_PORT,
-                    new no.nb.sesam.ni.niserver.Cluster(TEST_SERVER_ADDR),
-                    new MockAuthorisationHandlerResolver(), null, null);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-    private void setupDenyNiServer() {
-        niServer.shutdown();
-        try {
-            niServer = new NiServer(TEST_SERVER_PORT,
-                    new no.nb.sesam.ni.niserver.Cluster(TEST_SERVER_ADDR),
-                    new MockAuthorisationDeniedHandlerResolver(), null, null);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        StreamInfo streamInfo = response.getBody();
+
+        assertEquals("URN:NBN:no-nb_dra_1992-01783P", streamInfo.getUrn());
+        assertEquals(50, streamInfo.getPlayDuration(), DELTA);
+        assertEquals(682, streamInfo.getPlayStart(), DELTA);
     }
 }
 

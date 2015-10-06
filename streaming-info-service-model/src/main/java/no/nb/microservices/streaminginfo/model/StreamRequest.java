@@ -7,10 +7,10 @@ public class StreamRequest {
     private String urn;
     private String ip;
     private String ssoToken;
-    private int offset;
-    private int extent;
+    private String site;
 
-    public StreamRequest() {}
+    public StreamRequest() {
+    }
 
     public StreamRequest(String urn, String ip, String ssoToken) {
         this.urn = urn;
@@ -18,12 +18,11 @@ public class StreamRequest {
         this.ssoToken = ssoToken;
     }
 
-    public StreamRequest(String urn, String ip, String ssoToken, int offset, int extent) {
+    public StreamRequest(String urn, String ip, String ssoToken, String site) {
         this.urn = urn;
         this.ip = ip;
         this.ssoToken = ssoToken;
-        this.offset = offset;
-        this.extent = extent;
+        this.site = site;
     }
 
     public String getUrn() {
@@ -50,19 +49,11 @@ public class StreamRequest {
         this.ssoToken = ssoToken;
     }
 
-    public int getOffset() {
-        return offset;
+    public String getSite() {
+        return site;
     }
 
-    public void setOffset(int offset) {
-        this.offset = offset;
-    }
-
-    public int getExtent() {
-        return extent;
-    }
-
-    public void setExtent(int extent) {
-        this.extent = extent;
+    public void setSite(String site) {
+        this.site = site;
     }
 }

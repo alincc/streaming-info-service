@@ -15,7 +15,7 @@ server:
 spring:
     datasource:
         driverClassName: com.mysql.jdbc.Driver
-        url: jdbc:mysql://localhost/test
+        url: jdbc:mysql://localhost/streaming
         username: dbuser
         password: dbpass
 

@@ -5,6 +5,8 @@ import no.nb.microservices.catalogitem.rest.model.Metadata;
 import no.nb.microservices.streaminginfo.core.item.service.ItemService;
 import no.nb.microservices.streaminginfo.core.resource.model.MediaResource;
 import no.nb.microservices.streaminginfo.core.resource.service.MediaResourceService;
+import no.nb.microservices.streaminginfo.core.statfjord.model.StatfjordInfo;
+import no.nb.microservices.streaminginfo.core.statfjord.service.StatfjordService;
 import no.nb.microservices.streaminginfo.model.StreamInfo;
 import no.nb.microservices.streaminginfo.model.StreamQuality;
 import no.nb.microservices.streaminginfo.model.StreamRequest;
@@ -42,12 +44,16 @@ public class StreamServiceTest {
     @Mock
     ItemService itemService;
 
+    @Mock
+    StatfjordService statfjordService;
+
     @Test
     public void getStreamInfoTest() {
         when(mediaResourceService.getMediafileAsync(eq("URN:NBN:no-nb_video_958"))).thenReturn(getMediaResourcesFuture());
         when(itemService.getItemByUrnAsync(eq("URN:NBN:no-nb_video_958"))).thenReturn(getItemFuture());
+        when(statfjordService.getStatfjordInfoAsync(eq("URN:NBN:no-nb_video_958"))).thenReturn(getStatfjordInfoFuture());
 
-        StreamRequest streamRequest = new StreamRequest("URN:NBN:no-nb_video_958", "127.0.0.1", "ssoToken=dummyToken&offset=60&extent=180");
+        StreamRequest streamRequest = new StreamRequest("URN:NBN:no-nb_video_958", "127.0.0.1", "ssoToken=dummyToken");
         StreamInfo streamInfo = streamService.getStreamInfo(streamRequest);
         assertEquals("URN:NBN:no-nb_video_958", streamInfo.getUrn());
         assertEquals(0, streamInfo.getPlayDuration(), DELTA);
@@ -58,23 +64,52 @@ public class StreamServiceTest {
         assertEquals("no-nb_video_958_1280x720x4000.mp4", lowQuality.getName());
         assertEquals("mp4", lowQuality.getType());
         assertEquals(2120389, lowQuality.getSize());
-        assertEquals(0, lowQuality.getVideo().getVideoBitrate());
-        assertEquals(0, lowQuality.getVideo().getVideoHeight());
-        assertEquals(0, lowQuality.getVideo().getVideoWidth());
-        assertEquals(null, lowQuality.getVideo().getVideoCodec());
-        assertEquals(0, lowQuality.getAudio().getAudioBitrate());
-        assertEquals(null, lowQuality.getAudio().getAudioCodec());
+        assertEquals(0, lowQuality.getVideo().getBitrate());
+        assertEquals(0, lowQuality.getVideo().getHeight());
+        assertEquals(0, lowQuality.getVideo().getWidth());
+        assertEquals(null, lowQuality.getVideo().getCodec());
+        assertEquals(0, lowQuality.getAudio().getBitrate());
+        assertEquals(null, lowQuality.getAudio().getCodec());
 
         StreamQuality highQuality = streamInfo.getQualities().get(1);
         assertEquals("no-nb_video_958_1920x1080x6000.mp4", highQuality.getName());
         assertEquals("mp4", highQuality.getType());
         assertEquals(3120389, highQuality.getSize());
-        assertEquals(0, highQuality.getVideo().getVideoBitrate());
-        assertEquals(0, highQuality.getVideo().getVideoHeight());
-        assertEquals(0, highQuality.getVideo().getVideoWidth());
-        assertEquals(null, highQuality.getVideo().getVideoCodec());
-        assertEquals(0, highQuality.getAudio().getAudioBitrate());
-        assertEquals(null, highQuality.getAudio().getAudioCodec());
+        assertEquals(0, highQuality.getVideo().getBitrate());
+        assertEquals(0, highQuality.getVideo().getHeight());
+        assertEquals(0, highQuality.getVideo().getWidth());
+        assertEquals(null, highQuality.getVideo().getCodec());
+        assertEquals(0, highQuality.getAudio().getBitrate());
+        assertEquals(null, highQuality.getAudio().getCodec());
+    }
+
+    private Future<StatfjordInfo> getStatfjordInfoFuture() {
+        return new Future<StatfjordInfo>() {
+            @Override
+            public boolean cancel(boolean mayInterruptIfRunning) {
+                return false;
+            }
+
+            @Override
+            public boolean isCancelled() {
+                return false;
+            }
+
+            @Override
+            public boolean isDone() {
+                return false;
+            }
+
+            @Override
+            public StatfjordInfo get() throws InterruptedException, ExecutionException {
+                return null;
+            }
+
+            @Override
+            public StatfjordInfo get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
+                return null;
+            }
+        };
     }
 
     private Future<List<MediaResource>> getMediaResourcesFuture() {

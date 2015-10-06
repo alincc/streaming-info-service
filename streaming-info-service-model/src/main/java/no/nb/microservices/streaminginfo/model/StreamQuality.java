@@ -6,9 +6,10 @@ package no.nb.microservices.streaminginfo.model;
 public class StreamQuality {
     private String name;
     private String type;
+    private String path;
     private long size;
-    private VideoInfo video;
-    private AudioInfo audio;
+    private Video video;
+    private Audio audio;
 
     public StreamQuality() {
     }
@@ -18,9 +19,10 @@ public class StreamQuality {
         this.type = type;
     }
 
-    public StreamQuality(String name, String type, long size, VideoInfo video, AudioInfo audio) {
+    public StreamQuality(String name, String type, String path, long size, Video video, Audio audio) {
         this.name = name;
         this.type = type;
+        this.path = path;
         this.size = size;
         this.video = video;
         this.audio = audio;
@@ -42,6 +44,14 @@ public class StreamQuality {
         this.type = type;
     }
 
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
     public long getSize() {
         return size;
     }
@@ -50,25 +60,25 @@ public class StreamQuality {
         this.size = size;
     }
 
-    public VideoInfo getVideo() {
+    public Video getVideo() {
         return video;
     }
 
-    public void setVideo(VideoInfo video) {
+    public void setVideo(Video video) {
         this.video = video;
     }
 
-    public AudioInfo getAudio() {
+    public Audio getAudio() {
         return audio;
     }
 
-    public void setAudio(AudioInfo audio) {
+    public void setAudio(Audio audio) {
         this.audio = audio;
     }
 
     public int totalBitrate() {
-        int audioBitrate = (this.getAudio() != null) ? this.getAudio().getAudioBitrate() : 0;
-        int videoBitrate = (this.getVideo() != null) ? this.getVideo().getVideoBitrate() : 0;
+        int audioBitrate = (this.getAudio() != null) ? this.getAudio().getBitrate() : 0;
+        int videoBitrate = (this.getVideo() != null) ? this.getVideo().getBitrate() : 0;
         return videoBitrate + audioBitrate;
     }
 }

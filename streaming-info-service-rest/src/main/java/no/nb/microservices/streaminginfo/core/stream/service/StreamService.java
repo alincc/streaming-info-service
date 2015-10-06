@@ -4,6 +4,8 @@ import no.nb.microservices.catalogitem.rest.model.ItemResource;
 import no.nb.microservices.streaminginfo.core.item.service.IItemService;
 import no.nb.microservices.streaminginfo.core.resource.model.MediaResource;
 import no.nb.microservices.streaminginfo.core.resource.service.MediaResourceService;
+import no.nb.microservices.streaminginfo.core.statfjord.model.StatfjordInfo;
+import no.nb.microservices.streaminginfo.core.statfjord.service.IStatfjordService;
 import no.nb.microservices.streaminginfo.core.stream.exception.StreamException;
 import no.nb.microservices.streaminginfo.model.*;
 import org.apache.commons.io.FilenameUtils;
@@ -20,25 +22,28 @@ import java.util.concurrent.Future;
 @Service
 public class StreamService implements IStreamService {
 
-    private final MediaResourceService mediaResourceService;
-    private final IItemService itemService;
+    @Autowired
+    private MediaResourceService mediaResourceService;
 
     @Autowired
-    public StreamService(MediaResourceService mediaResourceService, IItemService itemService) {
-        this.mediaResourceService = mediaResourceService;
-        this.itemService = itemService;
-    }
+    private IItemService itemService;
+
+    @Autowired
+    private IStatfjordService statfjordService;
 
     public StreamInfo getStreamInfo(StreamRequest streamRequest) {
         Future<List<MediaResource>> mediaResourceFuture = mediaResourceService.getMediafileAsync(streamRequest.getUrn());
         Future<ItemResource> itemResourceFuture = itemService.getItemByUrnAsync(streamRequest.getUrn());
+        Future<StatfjordInfo> statfjordInfoFuture = statfjordService.getStatfjordInfoAsync(streamRequest.getUrn());
 
         List<MediaResource> mediaResources;
         ItemResource itemResource;
+        StatfjordInfo statfjordInfo;
 
         try {
             mediaResources = mediaResourceFuture.get();
             itemResource = itemResourceFuture.get();
+            statfjordInfo = statfjordInfoFuture.get();
         }
         catch (InterruptedException ie) {
             throw new StreamException("Failed to fetch stream resources", ie);
@@ -50,11 +55,12 @@ public class StreamService implements IStreamService {
         StreamInfo streamInfo = new StreamInfo(streamRequest.getUrn());
 
         for (MediaResource mediaResource : mediaResources) {
-            VideoInfo videoInfo = new VideoInfo(0, 0, 0, null);
-            AudioInfo audioInfo = new AudioInfo(0, null);
+            Video videoInfo = new Video(0, 0, 0, null);
+            Audio audioInfo = new Audio(0, null);
 
             StreamQuality streamQuality = new StreamQuality(FilenameUtils.getName(mediaResource.getImageFile()),
                     FilenameUtils.getExtension(mediaResource.getImageFile()),
+                    mediaResource.getImageFile(),
                     mediaResource.getSize(),
                     videoInfo,
                     audioInfo);
@@ -62,9 +68,16 @@ public class StreamService implements IStreamService {
             streamInfo.getQualities().add(streamQuality);
         }
 
-        // TODO: Set offset and extent from itemResource
-        streamInfo.setPlayStart(0);
-        streamInfo.setPlayDuration(0);
+        // If statfjord, then set statfjord specific offset and extent
+        if (statfjordInfo != null) {
+            streamInfo.setPlayStart(statfjordInfo.getOffset());
+            streamInfo.setPlayDuration(statfjordInfo.getExtent());
+        }
+        else { // Else set default offset and extent
+            // TODO: Set offset and extent from itemResource
+            streamInfo.setPlayStart(0);
+            streamInfo.setPlayDuration(0);
+        }
 
         return streamInfo;
     }

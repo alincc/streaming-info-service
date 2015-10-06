@@ -11,6 +11,7 @@ import org.springframework.cloud.security.oauth2.resource.EnableOAuth2Resource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.hateoas.config.EnableHypermediaSupport;
 import org.springframework.hateoas.config.EnableHypermediaSupport.HypermediaType;
+import org.springframework.scheduling.annotation.EnableAsync;
 
 @SpringBootApplication
 @EnableConfigurationProperties
@@ -19,6 +20,7 @@ import org.springframework.hateoas.config.EnableHypermediaSupport.HypermediaType
 @EnableCircuitBreaker
 @EnableOAuth2Resource
 @EnableJpaRepositories
+@EnableAsync
 @RefreshScope
 @EnableHypermediaSupport(type= {HypermediaType.HAL})
 public class Application {
