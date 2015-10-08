@@ -36,6 +36,13 @@ spring:
 server:
     port: 8080
 
+spring:
+    datasource:
+        driverClassName: com.mysql.jdbc.Driver
+        url: jdbc:mysql://mysql/test
+        username: root
+        password: dbpass
+
 eureka:
   instance:
     preferIpAddress: true
