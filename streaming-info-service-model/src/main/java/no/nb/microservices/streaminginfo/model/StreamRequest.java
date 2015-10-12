@@ -14,7 +14,7 @@ public class StreamRequest {
         this.urn = urn;
     }
 
-    public StreamRequest(String urn, String ip, String ssoToken, String site) {
+    public StreamRequest(String urn, String site) {
         this.urn = urn;
         this.site = site;
     }

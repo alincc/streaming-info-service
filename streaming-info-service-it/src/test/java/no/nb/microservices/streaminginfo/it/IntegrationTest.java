@@ -123,7 +123,7 @@ public class IntegrationTest {
     public void getStreamInfoTest() {
         final HashMap<String, String> urlVariables = new HashMap<>();
         urlVariables.put("urn", "URN:NBN:no-nb_video_958");
-        String uri = "http://localhost:" + port + "/streams?urn={urn}";
+        String uri = "http://localhost:" + port + "/streams/{urn}";
         ResponseEntity<StreamInfo> response = rest.getForEntity(uri, StreamInfo.class, urlVariables);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -151,7 +151,7 @@ public class IntegrationTest {
     public void getStreamInfoAccessDeniedTest() {
         final HashMap<String, String> urlVariables = new HashMap<>();
         urlVariables.put("urn", "URN:NBN:no-nb_video_959");
-        String uri = "http://localhost:" + port + "/streams?urn={urn}";
+        String uri = "http://localhost:" + port + "/streams/{urn}";
         ResponseEntity<StreamInfo> response = rest.getForEntity(uri, StreamInfo.class, urlVariables);
 
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
@@ -161,7 +161,7 @@ public class IntegrationTest {
     public void getStatfjordStreamInfoTest() {
         final HashMap<String, String> urlVariables = new HashMap<>();
         urlVariables.put("urn", "URN:NBN:no-nb_dra_1992-01783P");
-        String uri = "http://localhost:" + port + "/streams?urn={urn}";
+        String uri = "http://localhost:" + port + "/streams/{urn}";
         ResponseEntity<StreamInfo> response = rest.getForEntity(uri, StreamInfo.class, urlVariables);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
