@@ -1,10 +1,10 @@
 {
   "_links": {
     "self": {
-      "href": "http://catalog-item-service/item/id1"
+      "href": "http://catalog-item-service/item/id2"
     }
   },
-  "id": "id1",
+  "id": "id2",
   "accessInfo": {
     "isDigital": true,
     "isPublicDomain": true,
@@ -13,12 +13,12 @@
   },
   "metadata": {
     "title": {
-      "title": "Title ID1"
+      "title": "Title ID2"
     },
     "streamingInfo": {
       "offset": 60,
       "extent": 120,
-      "identifier": "id1"
+      "identifier": "id2"
     }
   }
 }

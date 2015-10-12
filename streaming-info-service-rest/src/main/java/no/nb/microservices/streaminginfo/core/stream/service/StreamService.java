@@ -6,6 +6,7 @@ import no.nb.microservices.streaminginfo.core.resource.model.MediaResource;
 import no.nb.microservices.streaminginfo.core.resource.service.MediaResourceService;
 import no.nb.microservices.streaminginfo.core.statfjord.model.StatfjordInfo;
 import no.nb.microservices.streaminginfo.core.statfjord.service.IStatfjordService;
+import no.nb.microservices.streaminginfo.core.stream.exception.NoAccessException;
 import no.nb.microservices.streaminginfo.core.stream.exception.StreamException;
 import no.nb.microservices.streaminginfo.model.*;
 import org.apache.commons.io.FilenameUtils;
@@ -50,6 +51,11 @@ public class StreamService implements IStreamService {
         }
         catch (ExecutionException ee) {
             throw new StreamException("Failed to fetch stream resources", ee);
+        }
+
+        // Security check
+        if (!"ALL".equalsIgnoreCase(itemResource.getAccessInfo().getViewability())) {
+            throw new NoAccessException("User does not have access to content");
         }
 
         StreamInfo streamInfo = new StreamInfo(streamRequest.getUrn());

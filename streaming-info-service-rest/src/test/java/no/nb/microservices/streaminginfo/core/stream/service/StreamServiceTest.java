@@ -1,5 +1,6 @@
 package no.nb.microservices.streaminginfo.core.stream.service;
 
+import no.nb.microservices.catalogitem.rest.model.AccessInfo;
 import no.nb.microservices.catalogitem.rest.model.ItemResource;
 import no.nb.microservices.catalogitem.rest.model.Metadata;
 import no.nb.microservices.streaminginfo.core.item.service.ItemService;
@@ -53,7 +54,7 @@ public class StreamServiceTest {
         when(itemService.getItemByUrnAsync(eq("URN:NBN:no-nb_video_958"))).thenReturn(getItemFuture());
         when(statfjordService.getStatfjordInfoAsync(eq("URN:NBN:no-nb_video_958"))).thenReturn(getStatfjordInfoFuture());
 
-        StreamRequest streamRequest = new StreamRequest("URN:NBN:no-nb_video_958", "127.0.0.1", "ssoToken=dummyToken");
+        StreamRequest streamRequest = new StreamRequest("URN:NBN:no-nb_video_958");
         StreamInfo streamInfo = streamService.getStreamInfo(streamRequest);
         assertEquals("URN:NBN:no-nb_video_958", streamInfo.getUrn());
         assertEquals(0, streamInfo.getPlayDuration(), DELTA);
@@ -147,6 +148,12 @@ public class StreamServiceTest {
     private Future<ItemResource> getItemFuture() {
         ItemResource itemResource = new ItemResource();
         Metadata metadata = new Metadata();
+        AccessInfo accessInfo = new AccessInfo();
+        accessInfo.setAccessAllowedFrom("EVERYWHERE");
+        accessInfo.setDigital(true);
+        accessInfo.setPublicDomain(true);
+        accessInfo.setViewability("ALL");
+        itemResource.setAccessInfo(accessInfo);
         itemResource.setMetadata(metadata);
 
         return new Future<ItemResource>() {

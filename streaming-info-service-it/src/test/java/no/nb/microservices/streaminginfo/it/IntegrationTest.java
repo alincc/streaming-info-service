@@ -12,15 +12,10 @@ import no.nb.microservices.streaminginfo.core.resource.model.MediaResource;
 import no.nb.microservices.streaminginfo.core.resource.repository.MediaResourceRepository;
 import no.nb.microservices.streaminginfo.model.StreamInfo;
 import no.nb.microservices.streaminginfo.model.StreamQuality;
-import no.nb.sesam.ni.niclient.NiClient;
-import no.nb.sesam.ni.niserver.AuthorisationHandler;
-import no.nb.sesam.ni.niserver.AuthorisationHandlerResolver;
-import no.nb.sesam.ni.niserver.AuthorisationRequest;
-import no.nb.sesam.ni.niserver.NiServer;
-import no.nb.sesam.ni.niserver.authorisation.AcceptHandler;
-import no.nb.sesam.ni.niserver.authorisation.DenyHandler;
 import org.apache.commons.io.IOUtils;
-import org.junit.*;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,7 +30,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.util.SocketUtils;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -66,29 +60,12 @@ public class IntegrationTest {
     MockWebServer mockWebServer;
     RestTemplate rest;
 
-    static int TEST_SERVER_PORT;
-    static String TEST_SERVER_ADDR;
-    static NiServer niServer;
     static final double DELTA = 1e-15;
-
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-        TEST_SERVER_PORT = SocketUtils.findAvailableTcpPort();
-        TEST_SERVER_ADDR = "localhost:" + TEST_SERVER_PORT;
-
-        niServer = new NiServer(TEST_SERVER_PORT,
-                new no.nb.sesam.ni.niserver.Cluster(TEST_SERVER_ADDR),
-                new MockAuthorisationHandlerResolver(), null, null);
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-        niServer.shutdown(500);
-    }
 
     @Before
     public void setup() throws Exception {
         // Populate MediaResourceRepository
+        mediaResourceRepository.deleteAll();
         MediaResource mediaResourceLq = new MediaResource("URN:NBN:no-nb_video_958", 1, "/tmp/streaming/no-nb_video_958_1280x720x4000.mp4", 2120389, "browsing");
         mediaResourceRepository.save(Arrays.asList(mediaResourceLq));
 
@@ -97,13 +74,33 @@ public class IntegrationTest {
         mockWebServer = new MockWebServer();
 
         // Read mock data
-        String mock1 = IOUtils.toString(new ClassPathResource("catalog-item-service-id1.json").getInputStream());
+        String itemId1Mock = IOUtils.toString(new ClassPathResource("catalog-item-service-id1.json").getInputStream());
+        String itemId2Mock = IOUtils.toString(new ClassPathResource("catalog-item-service-id2.json").getInputStream());
+        String itemId3Mock = IOUtils.toString(new ClassPathResource("catalog-item-service-id3.json").getInputStream());
+        String indexServiceMock = IOUtils.toString(new ClassPathResource("catalog-search-index-service.json").getInputStream());
+        String indexServiceMock2 = IOUtils.toString(new ClassPathResource("catalog-search-index-service2.json").getInputStream());
+        String indexServiceMock3 = IOUtils.toString(new ClassPathResource("catalog-search-index-service3.json").getInputStream());
 
         final Dispatcher dispatcher = new Dispatcher() {
             @Override
             public MockResponse dispatch(RecordedRequest request) throws InterruptedException {
                 if (request.getPath().equals("/search?q=urn%3A%22URN%3ANBN%3Ano-nb_video_958%22&page=0&size=1")) {
-                    return new MockResponse().setBody(mock1).setHeader("Content-Type", "application/hal+json; charset=utf-8");
+                    return new MockResponse().setBody(indexServiceMock).setHeader("Content-Type", "application/hal+json; charset=utf-8");
+                }
+                else if (request.getPath().equals("/search?q=urn%3A%22URN%3ANBN%3Ano-nb_dra_1992-01783P%22&page=0&size=1")) {
+                    return new MockResponse().setBody(indexServiceMock2).setHeader("Content-Type", "application/hal+json; charset=utf-8");
+                }
+                else if (request.getPath().equals("/search?q=urn%3A%22URN%3ANBN%3Ano-nb_video_959%22&page=0&size=1")) {
+                    return new MockResponse().setBody(indexServiceMock3).setHeader("Content-Type", "application/hal+json; charset=utf-8");
+                }
+                else if (request.getPath().equals("/catalog/items/id1")) {
+                    return new MockResponse().setBody(itemId1Mock).setHeader("Content-Type", "application/hal+json; charset=utf-8");
+                }
+                else if (request.getPath().equals("/catalog/items/id2")) {
+                    return new MockResponse().setBody(itemId2Mock).setHeader("Content-Type", "application/hal+json; charset=utf-8");
+                }
+                else if (request.getPath().equals("/catalog/items/id3")) {
+                    return new MockResponse().setBody(itemId3Mock).setHeader("Content-Type", "application/hal+json; charset=utf-8");
                 }
                 else {
                     return new MockResponse().setResponseCode(404);
@@ -126,9 +123,7 @@ public class IntegrationTest {
     public void getStreamInfoTest() {
         final HashMap<String, String> urlVariables = new HashMap<>();
         urlVariables.put("urn", "URN:NBN:no-nb_video_958");
-        urlVariables.put("ip", "127.0.0.1");
-        urlVariables.put("ssoToken", "dummyToken");
-        String uri = "http://localhost:" + port + "/streams?urn={urn}&ip={ip}&ssoToken={ssoToken}";
+        String uri = "http://localhost:" + port + "/streams?urn={urn}";
         ResponseEntity<StreamInfo> response = rest.getForEntity(uri, StreamInfo.class, urlVariables);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -153,12 +148,20 @@ public class IntegrationTest {
     }
 
     @Test
+    public void getStreamInfoAccessDeniedTest() {
+        final HashMap<String, String> urlVariables = new HashMap<>();
+        urlVariables.put("urn", "URN:NBN:no-nb_video_959");
+        String uri = "http://localhost:" + port + "/streams?urn={urn}";
+        ResponseEntity<StreamInfo> response = rest.getForEntity(uri, StreamInfo.class, urlVariables);
+
+        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+    }
+
+    @Test
     public void getStatfjordStreamInfoTest() {
         final HashMap<String, String> urlVariables = new HashMap<>();
         urlVariables.put("urn", "URN:NBN:no-nb_dra_1992-01783P");
-        urlVariables.put("ip", "127.0.0.1");
-        urlVariables.put("ssoToken", "dummyToken");
-        String uri = "http://localhost:" + port + "/streams?urn={urn}&ip={ip}&ssoToken={ssoToken}";
+        String uri = "http://localhost:" + port + "/streams?urn={urn}";
         ResponseEntity<StreamInfo> response = rest.getForEntity(uri, StreamInfo.class, urlVariables);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -178,28 +181,3 @@ class RibbonClientConfiguration {
         return new BaseLoadBalancer();
     }
 }
-
-@Configuration
-class TestNiConfig {
-
-    @Bean
-    public NiClient getNiClient() throws Exception {
-        return new NiClient(IntegrationTest.TEST_SERVER_ADDR);
-    }
-}
-
-class MockAuthorisationHandlerResolver implements AuthorisationHandlerResolver {
-
-    public AuthorisationHandler resolve(AuthorisationRequest request) {
-        return new AcceptHandler();
-    }
-}
-
-class MockAuthorisationDeniedHandlerResolver implements AuthorisationHandlerResolver {
-
-    public AuthorisationHandler resolve(AuthorisationRequest request) {
-        return new DenyHandler();
-    }
-}
-
-

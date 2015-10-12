@@ -1,5 +1,6 @@
 package no.nb.microservices.streaminginfo.rest.global;
 
+import no.nb.microservices.streaminginfo.core.stream.exception.NoAccessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,12 @@ import java.util.Collections;
 public class GlobalExceptionHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
+    @ExceptionHandler(NoAccessException.class)
+    @ResponseStatus(value = HttpStatus.FORBIDDEN, reason = "User does not have access to get streaming info")
+    public void handleAccessDenied(HttpServletRequest req, Exception e) {
+
+    }
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR, reason = "It looks like we have a internal error in our application. The error have been logged and will be looked at by our development team.")

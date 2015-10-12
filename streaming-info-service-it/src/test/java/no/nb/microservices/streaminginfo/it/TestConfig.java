@@ -42,5 +42,4 @@ public class TestConfig {
         lemfb.setPackagesToScan("no.nb.microservices.streaminginfo");
         return lemfb;
     }
-
 }

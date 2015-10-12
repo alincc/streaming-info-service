@@ -1,16 +1,14 @@
 package no.nb.microservices.streaminginfo.core.item.service;
 
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
-import com.netflix.hystrix.contrib.javanica.command.AsyncResult;
 import no.nb.microservices.catalogitem.rest.model.ItemResource;
-import no.nb.microservices.catalogitem.rest.model.Metadata;
-import no.nb.microservices.catalogitem.rest.model.TitleInfo;
 import no.nb.microservices.streaminginfo.core.item.repository.ItemRepository;
 import no.nb.microservices.streaminginfo.core.searchindex.service.ISearchIndexService;
 import no.nb.microservices.streaminginfo.core.searchindex.service.SearchIndexService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
 
 import java.util.concurrent.Future;
@@ -33,37 +31,18 @@ public class ItemService implements IItemService {
     }
 
     @Override
-    @HystrixCommand(fallbackMethod = "getDefaultItem")
+    @Async
     public Future<ItemResource> getItemByIdAsync(String id) {
-        LOGGER.info("Fetching item from catalog-item-service by id " + id);
-        return new AsyncResult<ItemResource>() {
-            @Override
-            public ItemResource invoke() {
-                return itemRepository.getById(id);
-            }
-        };
+        ItemResource itemResource = itemRepository.getById(id);
+        return new AsyncResult<>(itemResource);
     }
 
     @Override
-    @HystrixCommand(fallbackMethod = "getDefaultItem")
+    @Async
     public Future<ItemResource> getItemByUrnAsync(String urn) {
-        return new AsyncResult<ItemResource>() {
-            @Override
-            public ItemResource invoke() {
-                String id = searchIndexService.getId(urn);
-                return itemRepository.getById(id);
-            }
-        };
-    }
+        String id = searchIndexService.getId(urn);
+        ItemResource itemResource = itemRepository.getById(id);
 
-    private ItemResource getDefaultItem(String id) {
-        LOGGER.warn("Failed to get item from catalog-item-service. Returning default item with id " + id);
-        TitleInfo titleInfo = new TitleInfo();
-        titleInfo.setTitle("No title");
-        Metadata metadata = new Metadata();
-        metadata.setTitleInfo(titleInfo);
-        ItemResource item = new ItemResource();
-        item.setMetadata(metadata);
-        return item;
+        return new AsyncResult<>(itemResource);
     }
 }
