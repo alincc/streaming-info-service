@@ -3,6 +3,7 @@ package no.nb.microservices.streaminginfo.core.stream.service;
 import no.nb.microservices.catalogitem.rest.model.AccessInfo;
 import no.nb.microservices.catalogitem.rest.model.ItemResource;
 import no.nb.microservices.catalogitem.rest.model.Metadata;
+import no.nb.microservices.catalogitem.rest.model.StreamingInfo;
 import no.nb.microservices.streaminginfo.core.item.service.ItemService;
 import no.nb.microservices.streaminginfo.core.resource.model.MediaResource;
 import no.nb.microservices.streaminginfo.core.resource.service.MediaResourceService;
@@ -57,8 +58,8 @@ public class StreamServiceTest {
         StreamRequest streamRequest = new StreamRequest("URN:NBN:no-nb_video_958");
         StreamInfo streamInfo = streamService.getStreamInfo(streamRequest);
         assertEquals("URN:NBN:no-nb_video_958", streamInfo.getUrn());
-        assertEquals(0, streamInfo.getPlayDuration(), DELTA);
-        assertEquals(0, streamInfo.getPlayStart(), DELTA);
+        assertEquals(120, streamInfo.getPlayDuration(), DELTA);
+        assertEquals(60, streamInfo.getPlayStart(), DELTA);
         assertEquals(2, streamInfo.getQualities().size());
 
         StreamQuality lowQuality = streamInfo.getQualities().get(0);
@@ -155,6 +156,8 @@ public class StreamServiceTest {
         accessInfo.setViewability("ALL");
         itemResource.setAccessInfo(accessInfo);
         itemResource.setMetadata(metadata);
+        StreamingInfo streamingInfo = new StreamingInfo("URN:NBN:no-nb_video_958", 60, 120);
+        metadata.setStreamingInfo(streamingInfo);
 
         return new Future<ItemResource>() {
             @Override

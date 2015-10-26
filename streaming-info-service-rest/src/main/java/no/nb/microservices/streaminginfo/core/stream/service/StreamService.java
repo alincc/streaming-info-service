@@ -80,9 +80,8 @@ public class StreamService implements IStreamService {
             streamInfo.setPlayDuration(statfjordInfo.getExtent());
         }
         else { // Else set default offset and extent
-            // TODO: Set offset and extent from itemResource
-            streamInfo.setPlayStart(0);
-            streamInfo.setPlayDuration(0);
+            streamInfo.setPlayStart((itemResource.getMetadata().getStreamingInfo() != null) ? itemResource.getMetadata().getStreamingInfo().getOffset() : 0);
+            streamInfo.setPlayDuration((itemResource.getMetadata().getStreamingInfo() != null) ? itemResource.getMetadata().getStreamingInfo().getExtent() : 0);
         }
 
         return streamInfo;

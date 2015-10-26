@@ -131,8 +131,8 @@ public class IntegrationTest {
         StreamInfo streamInfo = response.getBody();
 
         assertEquals("URN:NBN:no-nb_video_958", streamInfo.getUrn());
-        assertEquals(0, streamInfo.getPlayDuration(), DELTA);
-        assertEquals(0, streamInfo.getPlayStart(), DELTA);
+        assertEquals(120, streamInfo.getPlayDuration(), DELTA);
+        assertEquals(60, streamInfo.getPlayStart(), DELTA);
         assertEquals(1, streamInfo.getQualities().size());
 
         StreamQuality lowQuality = streamInfo.getQualities().stream().filter(q -> q.getName().equals("no-nb_video_958_1280x720x4000.mp4")).findFirst().get();
