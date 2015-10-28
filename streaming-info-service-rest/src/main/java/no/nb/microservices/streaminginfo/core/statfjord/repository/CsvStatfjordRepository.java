@@ -11,8 +11,8 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Repository;
 
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +30,7 @@ public class CsvStatfjordRepository implements StatfjordRepository {
         List<StatfjordInfo> statfjordInfos = new ArrayList<>();
 
         try {
-            CSVParser parser = new CSVParser(new FileReader(new ClassPathResource("statfjord.csv").getFile()), CSVFormat.DEFAULT.withHeader());
+            CSVParser parser = new CSVParser(new InputStreamReader(new ClassPathResource("statfjord.csv").getInputStream()), CSVFormat.DEFAULT.withHeader());
 
             for (CSVRecord record : parser) {
                 statfjordInfos.add(new StatfjordInfo(record.get("URN"), Integer.parseInt(record.get("OFFSET")), Integer.parseInt(record.get("EXTENT"))));

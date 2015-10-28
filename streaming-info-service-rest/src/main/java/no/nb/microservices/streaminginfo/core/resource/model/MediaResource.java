@@ -8,7 +8,7 @@ import javax.persistence.Id;
 /**
  * Created by andreasb on 29.09.15.
  */
-@Entity
+@Entity(name = "resources")
 public class MediaResource {
 
     @Id
