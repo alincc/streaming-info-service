@@ -15,8 +15,8 @@ server:
 spring:
     datasource:
         driverClassName: com.mysql.jdbc.Driver
-        url: jdbc:mysql://localhost/streaming
-        username: dbuser
+        url: jdbc:mysql://localhost/test
+        username: root
         password: dbpass
 
 eureka:
