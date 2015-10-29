@@ -3,11 +3,13 @@ package no.nb.microservices.streaminginfo.core.resource.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
 
 
 /**
  * Created by andreasb on 29.09.15.
  */
+@IdClass(MediaResourceId.class)
 @Entity(name = "resources")
 public class MediaResource {
 
@@ -15,10 +17,11 @@ public class MediaResource {
     @Column(name = "identifier")
     private String identifier;
 
-    @Column(name = "component_nr")
-    private int componentNr;
+    @Id
+    @Column(name = "component_no")
+    private int componentNo;
 
-    @Column(name = "imageFile")
+    @Column(name = "imagefile")
     private String imageFile;
 
     @Column(name = "size")
@@ -36,9 +39,9 @@ public class MediaResource {
     public MediaResource() {
     }
 
-    public MediaResource(String identifier, int componentNr, String imageFile, int size, String purpose) {
+    public MediaResource(String identifier, int componentNo, String imageFile, int size, String purpose) {
         this.identifier = identifier;
-        this.componentNr = componentNr;
+        this.componentNo = componentNo;
         this.imageFile = imageFile;
         this.size = size;
         this.purpose = purpose;
@@ -52,12 +55,12 @@ public class MediaResource {
         this.identifier = identifier;
     }
 
-    public int getComponentNr() {
-        return componentNr;
+    public int getComponentNo() {
+        return componentNo;
     }
 
-    public void setComponentNr(int componentNr) {
-        this.componentNr = componentNr;
+    public void setComponentNo(int componentNo) {
+        this.componentNo = componentNo;
     }
 
     public String getImageFile() {
@@ -100,3 +103,4 @@ public class MediaResource {
         this.purpose = purpose;
     }
 }
+

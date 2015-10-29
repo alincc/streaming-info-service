@@ -13,11 +13,11 @@ server:
   port: 8045
 
 spring:
-    datasource:
-        driverClassName: com.mysql.jdbc.Driver
-        url: jdbc:mysql://localhost/test
-        username: root
-        password: dbpass
+  datasource:
+      driverClassName: com.mysql.jdbc.Driver
+      url: jdbc:mysql://localhost/test
+      username: root
+      password: dbpass
 
 eureka:
   instance:
