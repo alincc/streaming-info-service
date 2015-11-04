@@ -52,7 +52,7 @@ public class StreamServiceTest {
     @Test
     public void getStreamInfoTest() {
         when(mediaResourceService.getMediafileAsync(eq("URN:NBN:no-nb_video_958"))).thenReturn(getMediaResourcesFuture());
-        when(itemService.getItemByUrnAsync(eq("URN:NBN:no-nb_video_958"))).thenReturn(getItemFuture());
+        when(itemService.getItemByUrnAsync(eq("URN:NBN:no-nb_video_958"))).thenReturn(getItemFuture(false));
         when(statfjordService.getStatfjordInfoAsync(eq("URN:NBN:no-nb_video_958"))).thenReturn(getStatfjordInfoFuture());
 
         StreamRequest streamRequest = new StreamRequest("URN:NBN:no-nb_video_958");
@@ -83,6 +83,19 @@ public class StreamServiceTest {
         assertEquals(null, highQuality.getVideo().getCodec());
         assertEquals(0, highQuality.getAudio().getBitrate());
         assertEquals(null, highQuality.getAudio().getCodec());
+    }
+
+    @Test
+    public void getStreamInfoWithSubUrnTest() {
+        when(mediaResourceService.getMediafileAsync(eq("URN:NBN:no-nb_video_959"))).thenReturn(getMediaResourcesFuture());
+        when(itemService.getItemByUrnAsync(eq("URN:NBN:no-nb_video_958"))).thenReturn(getItemFuture(true));
+        when(statfjordService.getStatfjordInfoAsync(eq("URN:NBN:no-nb_video_958"))).thenReturn(getStatfjordInfoFuture());
+
+        StreamRequest streamRequest = new StreamRequest("URN:NBN:no-nb_video_958", "URN:NBN:no-nb_video_959");
+        StreamInfo streamInfo = streamService.getStreamInfo(streamRequest);
+        assertEquals("URN:NBN:no-nb_video_959", streamInfo.getUrn());
+        assertEquals(100, streamInfo.getPlayDuration(), DELTA);
+        assertEquals(180, streamInfo.getPlayStart(), DELTA);
     }
 
     private Future<StatfjordInfo> getStatfjordInfoFuture() {
@@ -146,7 +159,7 @@ public class StreamServiceTest {
         };
     }
 
-    private Future<ItemResource> getItemFuture() {
+    private Future<ItemResource> getItemFuture(boolean multipleStreamingInfos) {
         ItemResource itemResource = new ItemResource();
         Metadata metadata = new Metadata();
         AccessInfo accessInfo = new AccessInfo();
@@ -157,7 +170,14 @@ public class StreamServiceTest {
         itemResource.setAccessInfo(accessInfo);
         itemResource.setMetadata(metadata);
         StreamingInfo streamingInfo = new StreamingInfo("URN:NBN:no-nb_video_958", 60, 120);
-        metadata.setStreamingInfo(streamingInfo);
+        StreamingInfo streamingInfo2 = new StreamingInfo("URN:NBN:no-nb_video_959", 180, 100);
+
+        if (multipleStreamingInfos) {
+            metadata.setStreamingInfo(Arrays.asList(streamingInfo, streamingInfo2));
+        }
+        else {
+            metadata.setStreamingInfo(Arrays.asList(streamingInfo));
+        }
 
         return new Future<ItemResource>() {
             @Override

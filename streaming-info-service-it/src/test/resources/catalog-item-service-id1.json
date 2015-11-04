@@ -15,10 +15,12 @@
     "title": {
       "title": "Title ID1"
     },
-    "streamingInfo": {
-      "offset": 60,
-      "extent": 120,
-      "identifier": "id1"
-    }
+    "streamingInfo": [
+      {
+        "offset": 60,
+        "extent": 120,
+        "identifier": "id1"
+      }
+    ]
   }
 }

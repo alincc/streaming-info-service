@@ -67,7 +67,9 @@ public class IntegrationTest {
         // Populate MediaResourceRepository
         mediaResourceRepository.deleteAll();
         MediaResource mediaResourceLq = new MediaResource("URN:NBN:no-nb_video_958", 1, "/tmp/streaming/no-nb_video_958_1280x720x4000.mp4", 2120389, "browsing");
-        mediaResourceRepository.save(Arrays.asList(mediaResourceLq));
+        MediaResource mediaResourceLqSub1 = new MediaResource("URN:NBN:no-nb_drl_4603", 1, "/tmp/streaming/no-nb_drl_4603_1280x720x4000.mp4", 2120389, "browsing");
+        MediaResource mediaResourceLqSub2 = new MediaResource("URN:NBN:no-nb_drl_2021", 1, "/tmp/streaming/no-nb_drl_2021_1280x720x4000.mp4", 2120389, "browsing");
+        mediaResourceRepository.save(Arrays.asList(mediaResourceLq, mediaResourceLqSub1, mediaResourceLqSub2));
 
         rest = new TestRestTemplate();
         mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
@@ -77,9 +79,11 @@ public class IntegrationTest {
         String itemId1Mock = IOUtils.toString(new ClassPathResource("catalog-item-service-id1.json").getInputStream());
         String itemId2Mock = IOUtils.toString(new ClassPathResource("catalog-item-service-id2.json").getInputStream());
         String itemId3Mock = IOUtils.toString(new ClassPathResource("catalog-item-service-id3.json").getInputStream());
+        String itemId4Mock = IOUtils.toString(new ClassPathResource("catalog-item-service-id4.json").getInputStream());
         String indexServiceMock = IOUtils.toString(new ClassPathResource("catalog-search-index-service.json").getInputStream());
         String indexServiceMock2 = IOUtils.toString(new ClassPathResource("catalog-search-index-service2.json").getInputStream());
         String indexServiceMock3 = IOUtils.toString(new ClassPathResource("catalog-search-index-service3.json").getInputStream());
+        String indexServiceMock4 = IOUtils.toString(new ClassPathResource("catalog-search-index-service4.json").getInputStream());
 
         final Dispatcher dispatcher = new Dispatcher() {
             @Override
@@ -93,6 +97,9 @@ public class IntegrationTest {
                 else if (request.getPath().equals("/search?q=urn%3A%22URN%3ANBN%3Ano-nb_video_959%22&page=0&size=1")) {
                     return new MockResponse().setBody(indexServiceMock3).setHeader("Content-Type", "application/hal+json; charset=utf-8");
                 }
+                else if (request.getPath().equals("/search?q=urn%3A%22URN%3ANBN%3Ano-nb_dra_1994-12731P%22&page=0&size=1")) {
+                    return new MockResponse().setBody(indexServiceMock4).setHeader("Content-Type", "application/hal+json; charset=utf-8");
+                }
                 else if (request.getPath().equals("/catalog/items/id1")) {
                     return new MockResponse().setBody(itemId1Mock).setHeader("Content-Type", "application/hal+json; charset=utf-8");
                 }
@@ -101,6 +108,9 @@ public class IntegrationTest {
                 }
                 else if (request.getPath().equals("/catalog/items/id3")) {
                     return new MockResponse().setBody(itemId3Mock).setHeader("Content-Type", "application/hal+json; charset=utf-8");
+                }
+                else if (request.getPath().equals("/catalog/items/id4")) {
+                    return new MockResponse().setBody(itemId4Mock).setHeader("Content-Type", "application/hal+json; charset=utf-8");
                 }
                 else {
                     return new MockResponse().setResponseCode(404);
@@ -171,6 +181,24 @@ public class IntegrationTest {
         assertEquals("URN:NBN:no-nb_dra_1992-01783P", streamInfo.getUrn());
         assertEquals(50, streamInfo.getPlayDuration(), DELTA);
         assertEquals(682, streamInfo.getPlayStart(), DELTA);
+    }
+
+    @Test
+    public void getStreamInfoWithSubUrnTest() {
+        final HashMap<String, String> urlVariables = new HashMap<>();
+        urlVariables.put("urn", "URN:NBN:no-nb_dra_1994-12731P");
+        urlVariables.put("subUrn", "URN:NBN:no-nb_drl_2021");
+        String uri = "http://localhost:" + port + "/streaming/streams/{urn}/{subUrn}";
+        ResponseEntity<StreamInfo> response = rest.getForEntity(uri, StreamInfo.class, urlVariables);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+
+        StreamInfo streamInfo = response.getBody();
+
+        assertEquals("URN:NBN:no-nb_drl_2021", streamInfo.getUrn());
+        assertEquals(1787, streamInfo.getPlayDuration(), DELTA);
+        assertEquals(3487, streamInfo.getPlayStart(), DELTA);
+        assertEquals("/tmp/streaming/no-nb_drl_2021_1280x720x4000.mp4", streamInfo.getQualities().get(0).getPath());
     }
 }
 

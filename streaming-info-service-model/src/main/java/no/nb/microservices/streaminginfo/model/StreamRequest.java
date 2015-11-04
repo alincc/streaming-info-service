@@ -5,6 +5,7 @@ package no.nb.microservices.streaminginfo.model;
  */
 public class StreamRequest {
     private String urn;
+    private String subUrn;
     private String site;
 
     public StreamRequest() {
@@ -14,9 +15,15 @@ public class StreamRequest {
         this.urn = urn;
     }
 
-    public StreamRequest(String urn, String site) {
+    public StreamRequest(String urn, String subUrn) {
+        this.urn = urn;
+        this.subUrn = subUrn;
+    }
+
+    public StreamRequest(String urn, String subUrn, String site) {
         this.urn = urn;
         this.site = site;
+        this.subUrn = subUrn;
     }
 
     public String getUrn() {
@@ -33,5 +40,13 @@ public class StreamRequest {
 
     public void setSite(String site) {
         this.site = site;
+    }
+
+    public String getSubUrn() {
+        return subUrn;
+    }
+
+    public void setSubUrn(String subUrn) {
+        this.subUrn = subUrn;
     }
 }

@@ -25,7 +25,12 @@ public class StreamController {
 
     @RequestMapping(value = "/streams/{urn}", method = RequestMethod.GET)
     public ResponseEntity<StreamInfo> getStreamInfo(@PathVariable String urn, @RequestParam(required = false, defaultValue = "") String site) {
-        return new ResponseEntity<>(streamService.getStreamInfo(new StreamRequest(urn, site)), HttpStatus.OK);
+        return new ResponseEntity<>(streamService.getStreamInfo(new StreamRequest(urn, "", site)), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/streams/{urn}/{subUrn}", method = RequestMethod.GET)
+    public ResponseEntity<StreamInfo> getStreamInfoWithSubUrn(@PathVariable String urn, @PathVariable String subUrn, @RequestParam(required = false, defaultValue = "") String site) {
+        return new ResponseEntity<>(streamService.getStreamInfo(new StreamRequest(urn, subUrn, site)), HttpStatus.OK);
     }
 }
 

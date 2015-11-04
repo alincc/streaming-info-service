@@ -1,0 +1,31 @@
+{
+  "_links": {
+    "self": {
+      "href": "http://catalog-item-service/item/id4"
+    }
+  },
+  "id": "id4",
+  "accessInfo": {
+    "isDigital": true,
+    "isPublicDomain": false,
+    "accessAllowedFrom": "NB",
+    "viewability": "ALL"
+  },
+  "metadata": {
+    "title": {
+      "title": "Title ID4"
+    },
+    "streamingInfo": [
+      {
+        "offset": 1814,
+        "extent": 1789,
+        "identifier": "URN:NBN:no-nb_drl_4603"
+      },
+      {
+        "offset": 3487,
+        "extent": 1787,
+        "identifier": "URN:NBN:no-nb_drl_2021"
+      }
+    ]
+  }
+}
