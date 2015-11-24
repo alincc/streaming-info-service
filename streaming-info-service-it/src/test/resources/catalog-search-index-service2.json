@@ -1,7 +1,7 @@
 {  
    "_links":{  
       "self":{  
-         "href":"http://localhost/search?q=urn%3A%22URN%3ANBN%3Ano-nb_dra_1992-01783P%22&page=0&size=1"
+         "href":"http://localhost/v1/search?q=urn%3A%22URN%3ANBN%3Ano-nb_dra_1992-01783P%22&page=0&size=1"
       }
    },
    "page":{  

@@ -7,9 +7,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-/**
- * Created by andreasb on 01.10.15.
- */
 @Repository
 public interface MediaResourceRepository extends JpaRepository<MediaResource, MediaResourceId> {
     List<MediaResource> findByIdentifier(String urn);

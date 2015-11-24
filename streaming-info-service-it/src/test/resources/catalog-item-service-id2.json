@@ -1,7 +1,7 @@
 {
   "_links": {
     "self": {
-      "href": "http://catalog-item-service/item/id2"
+      "href": "http://catalog-item-service/v1/item/id2"
     }
   },
   "id": "id2",

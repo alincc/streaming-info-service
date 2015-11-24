@@ -88,28 +88,28 @@ public class IntegrationTest {
         final Dispatcher dispatcher = new Dispatcher() {
             @Override
             public MockResponse dispatch(RecordedRequest request) throws InterruptedException {
-                if (request.getPath().equals("/search?q=urn%3A%22URN%3ANBN%3Ano-nb_video_958%22&page=0&size=1")) {
+                if (request.getPath().equals("/v1/search?q=urn%3A%22URN%3ANBN%3Ano-nb_video_958%22&page=0&size=1")) {
                     return new MockResponse().setBody(indexServiceMock).setHeader("Content-Type", "application/hal+json; charset=utf-8");
                 }
-                else if (request.getPath().equals("/search?q=urn%3A%22URN%3ANBN%3Ano-nb_dra_1992-01783P%22&page=0&size=1")) {
+                else if (request.getPath().equals("/v1/search?q=urn%3A%22URN%3ANBN%3Ano-nb_dra_1992-01783P%22&page=0&size=1")) {
                     return new MockResponse().setBody(indexServiceMock2).setHeader("Content-Type", "application/hal+json; charset=utf-8");
                 }
-                else if (request.getPath().equals("/search?q=urn%3A%22URN%3ANBN%3Ano-nb_video_959%22&page=0&size=1")) {
+                else if (request.getPath().equals("/v1/search?q=urn%3A%22URN%3ANBN%3Ano-nb_video_959%22&page=0&size=1")) {
                     return new MockResponse().setBody(indexServiceMock3).setHeader("Content-Type", "application/hal+json; charset=utf-8");
                 }
-                else if (request.getPath().equals("/search?q=urn%3A%22URN%3ANBN%3Ano-nb_dra_1994-12731P%22&page=0&size=1")) {
+                else if (request.getPath().equals("/v1/search?q=urn%3A%22URN%3ANBN%3Ano-nb_dra_1994-12731P%22&page=0&size=1")) {
                     return new MockResponse().setBody(indexServiceMock4).setHeader("Content-Type", "application/hal+json; charset=utf-8");
                 }
-                else if (request.getPath().equals("/catalog/items/id1")) {
+                else if (request.getPath().equals("/v1/catalog/items/id1")) {
                     return new MockResponse().setBody(itemId1Mock).setHeader("Content-Type", "application/hal+json; charset=utf-8");
                 }
-                else if (request.getPath().equals("/catalog/items/id2")) {
+                else if (request.getPath().equals("/v1/catalog/items/id2")) {
                     return new MockResponse().setBody(itemId2Mock).setHeader("Content-Type", "application/hal+json; charset=utf-8");
                 }
-                else if (request.getPath().equals("/catalog/items/id3")) {
+                else if (request.getPath().equals("/v1/catalog/items/id3")) {
                     return new MockResponse().setBody(itemId3Mock).setHeader("Content-Type", "application/hal+json; charset=utf-8");
                 }
-                else if (request.getPath().equals("/catalog/items/id4")) {
+                else if (request.getPath().equals("/v1/catalog/items/id4")) {
                     return new MockResponse().setBody(itemId4Mock).setHeader("Content-Type", "application/hal+json; charset=utf-8");
                 }
                 else {
@@ -133,7 +133,7 @@ public class IntegrationTest {
     public void getStreamInfoTest() {
         final HashMap<String, String> urlVariables = new HashMap<>();
         urlVariables.put("urn", "URN:NBN:no-nb_video_958");
-        String uri = "http://localhost:" + port + "/streaming/streams/{urn}";
+        String uri = "http://localhost:" + port + "/v1/streaming/streams/{urn}";
         ResponseEntity<StreamInfo> response = rest.getForEntity(uri, StreamInfo.class, urlVariables);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -161,7 +161,7 @@ public class IntegrationTest {
     public void getStreamInfoAccessDeniedTest() {
         final HashMap<String, String> urlVariables = new HashMap<>();
         urlVariables.put("urn", "URN:NBN:no-nb_video_959");
-        String uri = "http://localhost:" + port + "/streaming/streams/{urn}";
+        String uri = "http://localhost:" + port + "/v1/streaming/streams/{urn}";
         ResponseEntity<StreamInfo> response = rest.getForEntity(uri, StreamInfo.class, urlVariables);
 
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
@@ -171,7 +171,7 @@ public class IntegrationTest {
     public void getStatfjordStreamInfoTest() {
         final HashMap<String, String> urlVariables = new HashMap<>();
         urlVariables.put("urn", "URN:NBN:no-nb_dra_1992-01783P");
-        String uri = "http://localhost:" + port + "/streaming/streams/{urn}";
+        String uri = "http://localhost:" + port + "/v1/streaming/streams/{urn}";
         ResponseEntity<StreamInfo> response = rest.getForEntity(uri, StreamInfo.class, urlVariables);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -188,7 +188,7 @@ public class IntegrationTest {
         final HashMap<String, String> urlVariables = new HashMap<>();
         urlVariables.put("urn", "URN:NBN:no-nb_dra_1994-12731P");
         urlVariables.put("subUrn", "URN:NBN:no-nb_drl_2021");
-        String uri = "http://localhost:" + port + "/streaming/streams/{urn}/{subUrn}";
+        String uri = "http://localhost:" + port + "/v1/streaming/streams/{urn}/{subUrn}";
         ResponseEntity<StreamInfo> response = rest.getForEntity(uri, StreamInfo.class, urlVariables);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());

@@ -11,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/streaming")
+@RequestMapping("/v1/streaming")
 public class StreamController {
 
     private static final Logger LOG = LoggerFactory.getLogger(StreamController.class);
