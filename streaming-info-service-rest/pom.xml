@@ -26,12 +26,12 @@
         <dependency>
             <groupId>no.nb.microservices.catalogsearchindex</groupId>
             <artifactId>catalog-search-index-model</artifactId>
-            <version>-50</version>
+            <version>0.0.1-91</version>
         </dependency>
         <dependency>
             <groupId>no.nb.microservices.catalogitem</groupId>
             <artifactId>catalog-item-service-model</artifactId>
-            <version>0.0.1-148</version>
+            <version>0.0.1-204</version>
         </dependency>
 
         <dependency>
