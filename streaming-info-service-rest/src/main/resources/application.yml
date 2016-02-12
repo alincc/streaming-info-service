@@ -3,14 +3,8 @@ info:
     name: streaming-info-service
     description: Shows information of where and how you can stream audio and videos
 
-endpoints:
-  restart:
-    enabled: true
-  refresh:
-    enabled: true
-
 server:
-  port: 8045
+  port: 0
 
 spring:
   datasource:
@@ -18,29 +12,3 @@ spring:
       url: jdbc:mysql://localhost/test
       username: root
       password: dbpass
-
-eureka:
-  instance:
-    preferIpAddress: true
-  client:
-    serviceUrl:
-      defaultZone: http://localhost:8761/eureka/
-
----
-spring:
-    profiles: docker
-    datasource:
-        driverClassName: com.mysql.jdbc.Driver
-        url: jdbc:mysql://mysql/test
-        username: root
-        password: dbpass
-
-server:
-    port: 8080
-
-eureka:
-  instance:
-    preferIpAddress: true
-  client:
-    serviceUrl:
-      defaultZone: http://discovery:8761/eureka/
