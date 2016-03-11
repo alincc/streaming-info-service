@@ -12,9 +12,11 @@
     "viewability": "ALL"
   },
   "metadata": {
-    "title": {
-      "title": "Title ID1"
-    },
+    "titleInfos": [
+      {
+        "title": "Title ID1"
+      }
+    ],
     "streamingInfo": [
       {
         "offset": 60,
