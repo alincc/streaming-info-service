@@ -26,12 +26,12 @@
         <dependency>
             <groupId>no.nb.microservices.catalogsearchindex</groupId>
             <artifactId>catalog-search-index-model</artifactId>
-            <version>0.0.1-100</version>
+            <version>0.0.1-101</version>
         </dependency>
         <dependency>
             <groupId>no.nb.microservices.catalogitem</groupId>
             <artifactId>catalog-item-service-model</artifactId>
-            <version>0.0.1-222</version>
+            <version>0.0.1-228</version>
         </dependency>
 
         <dependency>
@@ -140,7 +140,6 @@
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <version>2.4</version>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 

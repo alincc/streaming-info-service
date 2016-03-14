@@ -80,36 +80,20 @@ public class StreamControllerIT {
         String itemId2Mock = IOUtils.toString(new ClassPathResource("catalog-item-service-id2.json").getInputStream());
         String itemId3Mock = IOUtils.toString(new ClassPathResource("catalog-item-service-id3.json").getInputStream());
         String itemId4Mock = IOUtils.toString(new ClassPathResource("catalog-item-service-id4.json").getInputStream());
-        String indexServiceMock = IOUtils.toString(new ClassPathResource("catalog-search-index-service.json").getInputStream());
-        String indexServiceMock2 = IOUtils.toString(new ClassPathResource("catalog-search-index-service2.json").getInputStream());
-        String indexServiceMock3 = IOUtils.toString(new ClassPathResource("catalog-search-index-service3.json").getInputStream());
-        String indexServiceMock4 = IOUtils.toString(new ClassPathResource("catalog-search-index-service4.json").getInputStream());
 
         final Dispatcher dispatcher = new Dispatcher() {
             @Override
             public MockResponse dispatch(RecordedRequest request) throws InterruptedException {
-                if (request.getPath().equals("/catalog/v1/search?q=urn%3A%22URN%3ANBN%3Ano-nb_video_958%22&page=0&size=1")) {
-                    return new MockResponse().setBody(indexServiceMock).setHeader("Content-Type", "application/hal+json; charset=utf-8");
-                }
-                else if (request.getPath().equals("/catalog/v1/search?q=urn%3A%22URN%3ANBN%3Ano-nb_dra_1992-01783P%22&page=0&size=1")) {
-                    return new MockResponse().setBody(indexServiceMock2).setHeader("Content-Type", "application/hal+json; charset=utf-8");
-                }
-                else if (request.getPath().equals("/catalog/v1/search?q=urn%3A%22URN%3ANBN%3Ano-nb_video_959%22&page=0&size=1")) {
-                    return new MockResponse().setBody(indexServiceMock3).setHeader("Content-Type", "application/hal+json; charset=utf-8");
-                }
-                else if (request.getPath().equals("/catalog/v1/search?q=urn%3A%22URN%3ANBN%3Ano-nb_dra_1994-12731P%22&page=0&size=1")) {
-                    return new MockResponse().setBody(indexServiceMock4).setHeader("Content-Type", "application/hal+json; charset=utf-8");
-                }
-                else if (request.getPath().equals("/catalog/v1/items/id1")) {
+                if (request.getPath().equals("/catalog/v1/items/URN%3ANBN%3Ano-nb_video_958")) {
                     return new MockResponse().setBody(itemId1Mock).setHeader("Content-Type", "application/hal+json; charset=utf-8");
                 }
-                else if (request.getPath().equals("/catalog/v1/items/id2")) {
+                else if (request.getPath().equals("/catalog/v1/items/URN%3ANBN%3Ano-nb_dra_1992-01783P")) {
                     return new MockResponse().setBody(itemId2Mock).setHeader("Content-Type", "application/hal+json; charset=utf-8");
                 }
-                else if (request.getPath().equals("/catalog/v1/items/id3")) {
+                else if (request.getPath().equals("/catalog/v1/items/URN%3ANBN%3Ano-nb_video_959")) {
                     return new MockResponse().setBody(itemId3Mock).setHeader("Content-Type", "application/hal+json; charset=utf-8");
                 }
-                else if (request.getPath().equals("/catalog/v1/items/id4")) {
+                else if (request.getPath().equals("/catalog/v1/items/URN%3ANBN%3Ano-nb_dra_1994-12731P")) {
                     return new MockResponse().setBody(itemId4Mock).setHeader("Content-Type", "application/hal+json; charset=utf-8");
                 }
                 else {

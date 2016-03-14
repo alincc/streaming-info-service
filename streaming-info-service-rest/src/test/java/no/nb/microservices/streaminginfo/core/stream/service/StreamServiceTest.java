@@ -52,7 +52,7 @@ public class StreamServiceTest {
     @Test
     public void getStreamInfoTest() {
         when(mediaResourceService.getMediafileAsync(eq("URN:NBN:no-nb_video_958"))).thenReturn(getMediaResourcesFuture());
-        when(itemService.getItemByUrnAsync(eq("URN:NBN:no-nb_video_958"))).thenReturn(getItemFuture(false));
+        when(itemService.getItemByIdAsync(eq("URN:NBN:no-nb_video_958"))).thenReturn(getItemFuture(false));
         when(statfjordService.getStatfjordInfoAsync(eq("URN:NBN:no-nb_video_958"))).thenReturn(getStatfjordInfoFuture());
 
         StreamRequest streamRequest = new StreamRequest("URN:NBN:no-nb_video_958");
@@ -88,7 +88,7 @@ public class StreamServiceTest {
     @Test
     public void getStreamInfoWithSubUrnTest() {
         when(mediaResourceService.getMediafileAsync(eq("URN:NBN:no-nb_video_959"))).thenReturn(getMediaResourcesFuture());
-        when(itemService.getItemByUrnAsync(eq("URN:NBN:no-nb_video_958"))).thenReturn(getItemFuture(true));
+        when(itemService.getItemByIdAsync(eq("URN:NBN:no-nb_video_958"))).thenReturn(getItemFuture(true));
         when(statfjordService.getStatfjordInfoAsync(eq("URN:NBN:no-nb_video_958"))).thenReturn(getStatfjordInfoFuture());
 
         StreamRequest streamRequest = new StreamRequest("URN:NBN:no-nb_video_958", "URN:NBN:no-nb_video_959");

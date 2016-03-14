@@ -39,7 +39,7 @@ public class StreamService implements IStreamService {
     public StreamInfo getStreamInfo(StreamRequest streamRequest) {
         Future<List<MediaResource>> mediaResourceFuture = mediaResourceService.getMediafileAsync(
                 StringUtils.isNotEmpty(streamRequest.getSubUrn()) ? streamRequest.getSubUrn() : streamRequest.getUrn());
-        Future<ItemResource> itemResourceFuture = itemService.getItemByUrnAsync(streamRequest.getUrn());
+        Future<ItemResource> itemResourceFuture = itemService.getItemByIdAsync(streamRequest.getUrn());
         Future<StatfjordInfo> statfjordInfoFuture = statfjordService.getStatfjordInfoAsync(streamRequest.getUrn());
 
         List<MediaResource> mediaResources;
